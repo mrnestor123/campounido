@@ -94,15 +94,15 @@ function Input() {
 
     //let inputclass = "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
 
-    let labelclass = "block text-4xl lg:text-xl font-medium leading-6 text-gray-900 mb-8 lg:mb-2"
+    let labelclass = "block text-4xl lg:text-xl font-medium leading-6 text-gray-900 mb-8 lg:mb-2 flex items-end"
     
     return {
         view: (vnode) => {
-            let { data, id, name, type = 'input', oninput, style, rows, label } = vnode.attrs
+            let { data, id, name, type = 'input', oninput, style, rows,required, label } = vnode.attrs
             
             return [
-                m(".flex.flex-col.w-full",
-                label ?  m("label",{class:labelclass}, localize(label)) : null,
+                m(".flex.flex-col.w-full.items-start",
+                label ?  m("label",{class:labelclass}, localize(label), (required ? m('.text-red-900.text-4xl.lg:text-xl',' *'):'')) : null,
                 type != "textarea" ?                  
                     m("input",
                     {
@@ -203,10 +203,12 @@ function Select() {
 
     let selectclass = ' block p-8 lg:p-4 w-full  border-2 border-b-4 focus:border-green-800  placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-green-600 '
 
-    //let inputclass = "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
+    //let inputclass = "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6 focus:ring-green-600"
 
     let labelclass = "block text-4xl lg:text-xl font-medium leading-6 text-gray-900 mb-8 lg:mb-2"
     
+
+   // let selectclass = "block w-full leading-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600  sm:text-sm sm:leading-6"
 
     return {
         view: (vnode) => {

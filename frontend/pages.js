@@ -227,7 +227,6 @@ function LandingPage(){
         }
 
         function sendData(){
-
             //  SEND  TO API!
             state = states.sent_form
         }
@@ -239,7 +238,7 @@ function LandingPage(){
             view: (vnode)=> {
                 return m("div",{ class:"fixed inset-0 z-20 bg-amber-50 lg:p-4 flex flex-col justify-start h-dvh w-full"},
 
-                    m("div",{ class: " p-4 w-full z-30 flex-none justify-between h-1/10",onclick:(e)=> showRequestForm=false},
+                    m("div",{ class: " p-4 w-full z-30 flex-none justify-between h-1/10",onclick:(e)=> showRequestForm = false},
                         m("img",{src:"assets/close.svg", class:"w-20 lg:w-12 bg-black rounded-full p-2 cursor-pointer"}),
                     ),
                     
@@ -395,6 +394,7 @@ function LandingPage(){
                             m(Input,{
                                 oninput:(e)=>{ error.name ? error.name = e.target.value !='' : ''},
                                 class: error.name ? 'border-red-500':'',
+                                required:true,
                                 label: 'Nombre',
                                 placeholder:"Tu nombre",
                                 data: requestData,
@@ -404,6 +404,7 @@ function LandingPage(){
                             m(Input,{
                                 oninput:(e)=>{ error.surname ? error.name = e.target.value !='' : ''},
                                 class:(error.surname ? 'border-red-500':''),
+                                required:true,
                                 label:'Apellidos',
                                 placeholder:'Tus apellidos',
                                 data: requestData,
@@ -412,6 +413,7 @@ function LandingPage(){
                             m(".mt-12.lg:mt-4"),
                             m(Input,{
                                 oninput:(e)=>{ error.email ? error.email= validateEmail(e.target.value) : ''},
+                                required:true,
                                 class:(error.email ? 'border-red-500':''),
                                 name:'email',
                                 placeholder:"Tu correo electrónico",
@@ -452,6 +454,11 @@ function LandingPage(){
                                 label: "Provincia",
                                 data: requestData
                             }),
+
+                            /*
+                            m(Input,{
+                                class:(error.locality ? 'border-red-500':'')
+                            }),*/
                             m(Button,{
                                 class:"bg-black-900 w-full d-block mt-8",
                                 onclick:checkFields,
