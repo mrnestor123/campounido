@@ -206,7 +206,7 @@ function LandingPage(){
             sent_form:2
         }
 
-        let state = 1;
+        let state = 0;
 
         let types = {
             customer: 0,
@@ -386,14 +386,14 @@ function LandingPage(){
                 view:(vnode)=>{
 
                     return [
-                        m(".flex.flex-col.w-full.border-2.border-grey.p-4.pb-10",
-                            m("p.mb-8.text-center", 
-                                requestData.type !=  types.farmer ?
+                        m(".flex.flex-col.w-full.border-2.border-grey.p-4.pb-10.bg-white",
+                            m("p.mt-8.mb-8.text-center", 
+                                requestData.type != types.farmer ?
                                 "Introduce tu información de contacto" :
                                 "Para posterior uso de la herramienta se verificarán los datos"
                             ),
                             m(Input,{
-                                oninput:(e)=>{error.name ? error.name = e.target.value !='' : ''},
+                                oninput:(e)=>{ error.name ? error.name = e.target.value !='' : ''},
                                 class: error.name ? 'border-red-500':'',
                                 label: 'Nombre',
                                 placeholder:"Tu nombre",
@@ -402,7 +402,7 @@ function LandingPage(){
                             }),
                             m(".mt-12.lg:mt-4"),
                             m(Input,{
-                                oninput:(e)=>{error.surname ? error.name = e.target.value !='' : ''},
+                                oninput:(e)=>{ error.surname ? error.name = e.target.value !='' : ''},
                                 class:(error.surname ? 'border-red-500':''),
                                 label:'Apellidos',
                                 placeholder:'Tus apellidos',
@@ -411,7 +411,7 @@ function LandingPage(){
                             }),
                             m(".mt-12.lg:mt-4"),
                             m(Input,{
-                                oninput:(e)=>{error.email ? error.email= validateEmail(e.target.value) : ''},
+                                oninput:(e)=>{ error.email ? error.email= validateEmail(e.target.value) : ''},
                                 class:(error.email ? 'border-red-500':''),
                                 name:'email',
                                 placeholder:"Tu correo electrónico",
