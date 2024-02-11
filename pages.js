@@ -1,10 +1,10 @@
-import { Button, Icon, Section } from "./components.js"
+import { Button, Icon, Input, LegacyIcon, Section } from "./components.js"
 
 
 function LandingPage(){
 
     // PARA EL OVERLAY DEL TEXTO Y LOS BOTONES
-    let textclass = "text-white p-8 lg:p-4 flex flex-col mb-80 lg:mb-20 ml-10 lg:ml-10 mr-10 z-10 fadein w-9/10 lg:w-3/4 "
+    let textclass = "text-white p-8 lg:p-4 flex flex-col mb-80 lg:mb-20 ml-10 lg:ml-10 mr-10 z-10 fadein w-9/10 lg:max-w-3/4 "
 
     let buttonclass = "text-white w-full text-bold  lg:relative left-0 bottom-0 right-0"
 
@@ -32,8 +32,6 @@ function LandingPage(){
                 m(ContactSections),
 
 
-
-                // QUE HACEMOS Y QUE QUEREMOS OFRECER
 
 
             ]
@@ -98,7 +96,7 @@ function LandingPage(){
                     let {onclick} = vnode.attrs
 
                     return [
-                        m("div",{
+                        m("div", {
                             onclick:onclick, 
                             class:"absolute top-10 lg:top-5 bg-black rounded-full p-4 z-10 cursor-pointer", 
                             style:"left:50%;transform:translateX(-50%)"
@@ -115,7 +113,7 @@ function LandingPage(){
                 return [
                     m(Section,{class: sectionclass, id:'whoweare'}, [
                         m(UpArrow,{
-                            onclick:(e)=>{
+                            onclick:(e)=> {
                                 let element = document.getElementById('carousel')
                                 element.scrollIntoView({behavior: "smooth", block: "start", inline: "end"});
                             }
@@ -177,22 +175,133 @@ function LandingPage(){
     // FORMULARIO DE UNION, TANTO COMO COMERCIANTE, COMO USUARIO, COMO X
     function RequestForm(){
 
+        let requestData = {}
+
+        let states = {
+            selecting_type:0,
+            filling_data: 1
+        }
+
+
+        let state = 0;
+
+        let types = {
+            customer: 0,
+            farmer: 1,
+            supplier: 2
+        }
+
+
+        function TypeButton(){
+            
+            return  {
+                view: (vnode)=> {
+                    let { image, title, description, type }  = vnode.attrs
+                    
+                    return m("div", {
+                            class: "rounded-lg flex-1 m-4 lg:h-auto relative cursor-pointer",  
+                            onclick:(e)=> { 
+                                requestData.type = type;
+                                state = states.filling_data 
+                            }
+                        },
+                        
+                        m("div",{class:"absolute p-4 hover:opacity-0 opacity-9 z-20 inset-0 bg-black/50 flex flex-col items-center justify-center text-white align-center"}, 
+                            m("h1.text-white", title),
+                            m("p.text-center", description)
+                        ),
+
+                        m("img",{ src:image, class:"object-cover h-1/4 w-full lg:h-full"})
+                    )
+                }
+            }
+        }
+
+        function BasicForm(){
+
+            return {
+                view:(vnode)=>{
+                    return [
+                        m(Input,{
+                            label: 'Nombre',
+                            data: requestData,
+                            name: 'name'
+                        }),
+                        m("div.mt-4"),
+                        
+                        m(Input,{
+                            class:'mt-4',
+                            label:'Apellidos',
+                            data: requestData,
+                            name: 'surname'
+                        }),
+
+                        m(Input,{
+                            class:"mt-4",
+                            type:'email',
+                            label: "Correo electrónico",
+                            data: requestData
+                        }),
+
+
+                        m(Input,{
+                            class:"mt-4",
+                            type:'email',
+                            label: "Correo electrónico",
+                            data: requestData
+                        })
+                    ]
+                }
+            }
+        }
+
+        function FarmerForm(){
+
+
+        }
 
         return {
             view: (vnode)=> {
-                return m("div",{class:"fixed inset-0 z-20 bg-amber-50 "},
-                    m("div", {class:"absolute left-10 top-10 bg-black p-4 rounded-full cursor-pointer",  onclick:(e)=> showRequestForm = false},
-                    
-                        m("img",{src:"assets/close.svg", class:"w-20 lg:w-10"})
+                return m("div",{class:"fixed inset-0 z-20 bg-amber-50 lg:p-4 flex flex-col justify-start h-dvh w-full"},
+
+                    m("div",{class:" p-4 w-full z-30 flex justify-between"},
+                        m("img",{src:"assets/close.svg", class:"w-20 lg:w-12 bg-black rounded-full p-2 cursor-pointer"}),
+                        // m(LegacyIcon)
                     ),
 
-                    m("div",{class:"flex flex-col justify-center h-dvh w-full items-center"},
 
-                        m("p",{class:"p-4"}, 
-                            "Aquí sería poner un formulario de entrada, si soy cliente me suscribo al mail list, si soy agricultor incluyo mi provincia, que quiero vender...etc etc etc"
+                    m("div",{class:"absolute top-10 flex justify-end  items-center w-full lg:justify-center", style:"left:50%;transform:translateX(-50%);"},),
+
+                    state == states.selecting_type ? 
+                    [   
+                        m("div",{class:"flex-1  sm:max-lg:flex-col lg:flex justify-evenly align-center"},
+                            m(TypeButton,{
+                                title: "Soy consumidor",
+                                type: types.customer,
+                                description:"Quiero recibir ofertas de productos y novedades",
+                                image:'assets/customers.jpg'
+                            }),
+
+                            m(TypeButton,{
+                                title: "Soy agricultor",
+                                type: types.farmer,
+                                description:"Quiero ofrecer mis productos a un precio justo.",
+                                image:'assets/farmers.jpg'
+                            }),
+
+                            m(TypeButton,{
+                                title: "Soy comerciante",
+                                type: types.supplier,
+                                description:"Quiero comprar o almacenar productos al por mayor, quiero recibir ofertas y novedades",
+                                image:'assets/warehouse.jpg'
+                            })
                         )
-                    
-                    ),
+                    ] :
+                    [
+                        m("div",{class:"flex flex-col h-dvh w-full items-center p-4"},
+                            m(BasicForm)
+                        ),
+                    ]
                 )
             }
         }

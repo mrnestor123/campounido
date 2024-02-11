@@ -1,3 +1,6 @@
+import { localize  } from "./util.js"
+
+
 
 /**
  * Componente para mostrar un icono
@@ -70,4 +73,85 @@ function Section(){
     }
 }
 
-export {Icon, Button, Section}
+
+/**
+ * Componente Input
+ * @param { String } size  small | large
+ * Fala pegarle un repaso brutal
+ */
+function Input() {
+    let types = {
+        "textarea": { class: "uk-textarea" },
+        "input": { class: "uk-input", type: "text" },
+        "password": { class: "uk-input", type: "password" },
+        "number": { class: "uk-input", type: "number" },
+        'time': { class: 'uk-input', type:'time'},
+        'checkbox': { class: 'uk-checkbox', type:'checkbox'},
+        'date': {class:'uk-input',type:'date'}
+    }
+
+    let inputclass = 'w-full p-4 '
+
+    return {
+        view: (vnode) => {
+            let { data, id, name, type = 'input', oninput, style, rows, label } = vnode.attrs
+            
+            return [
+                m(".flex.flex-col.w-full",
+                label ?  m("p.mb-2", localize(label)) : null,
+                type != "textarea" ?                  
+                    m("input",
+                    {
+                        class: inputclass,
+                        //style: style || '',
+                        placeholder: vnode.attrs.placeholder || '',
+                        id: id || undefined,
+                        type: type,
+                        value: data[name],
+                        min:vnode.attrs.min,
+                        width: vnode.attrs.width || undefined,
+                        autocomplete: "off",
+                        oninput: (e) => {
+                            if(type =='checkbox'){ data[name] = e.target.checked}
+                            else if (type == "number") { data[name] = Number(e.target.value) }
+                            else { data[name] = e.target.value; }
+                            
+                            if (oninput) oninput(e)
+                        },
+                    }
+                ) :
+                m("textarea",
+                    {
+                        class: types[type].class,
+                        placeholder: vnode.attrs.placeholder || '',
+                        style: style || '',
+                        rows: rows || "2",
+                        value: data[name],
+                        oninput: (e) => { data[name] = e.target.value; if (oninput) oninput(e) },
+                    }
+                ))
+            ]
+        }
+    }
+}
+
+
+
+function LegacyIcon(){
+
+    let outlineclass ="p-2 bg-gray-200 bg-opacity-50 rounded-full  flex items-center"
+
+    return {
+        view:(vnode)=>{
+            return  m("div", {class: outlineclass}, 
+                m("div",{class: "border-white border-2 p-2 rounded-full bg-white bg-opacity-50 flex items-center"},
+                    m("img", {src: "assets/campounido_logo.png", class: "w-20 lg:w-10"}),
+                    m("h1", {class: "text-6xl lg:text-xl align-center  mr-4"}, "El Campo Unido"),
+                )
+            )
+        }
+    }
+}
+
+
+export {Icon, Button, Section, Input, LegacyIcon}
