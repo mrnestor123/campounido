@@ -1,4 +1,4 @@
-import { Button, Icon, Input, LegacyIcon, Section } from "./components.js"
+import { Button, Icon, Input, LegacyIcon, Section,  Select } from "./components.js"
 
 
 function LandingPage(){
@@ -13,7 +13,27 @@ function LandingPage(){
 
     let showRequestForm = false
 
+
+    function preloadImages(){
+        let images = [
+            'assets/customers.jpg',
+            'assets/farmers.jpg',
+            'assets/warehouse.jpg'
+        ]
+
+
+        images.map((src)=>{
+           var img = new Image()
+
+           img.src = src
+        })
+
+    }
+
     return {
+        oninit: (vnode) =>{
+            preloadImages()
+        },
         view: (vnode) => {
             return [
                 showRequestForm ? m(RequestForm) :  null,
@@ -175,110 +195,63 @@ function LandingPage(){
     // FORMULARIO DE UNION, TANTO COMO COMERCIANTE, COMO USUARIO, COMO X
     function RequestForm(){
 
-        let requestData = {}
+        let requestData = {
+            'type':'',
+            'date':'',
+        }
 
         let states = {
             selecting_type:0,
-            filling_data: 1
+            filling_data: 1,
+            sent_form:2
         }
 
-
-        let state = 0;
+        let state = 1;
 
         let types = {
             customer: 0,
             farmer: 1,
             supplier: 2
+        }  
+
+        let typelabels = {
+            0: 'Consumidor',
+            1: 'Agricultor',
+            2: 'Comerciante'
         }
 
-
-        function TypeButton(){
-            
-            return  {
-                view: (vnode)=> {
-                    let { image, title, description, type }  = vnode.attrs
-                    
-                    return m("div", {
-                            class: "rounded-lg flex-1 m-4 lg:h-auto relative cursor-pointer",  
-                            onclick:(e)=> { 
-                                requestData.type = type;
-                                state = states.filling_data 
-                            }
-                        },
-                        
-                        m("div",{class:"absolute p-4 hover:opacity-0 opacity-9 z-20 inset-0 bg-black/50 flex flex-col items-center justify-center text-white align-center"}, 
-                            m("h1.text-white", title),
-                            m("p.text-center", description)
-                        ),
-
-                        m("img",{ src:image, class:"object-cover h-1/4 w-full lg:h-full"})
-                    )
-                }
-            }
+        let typefotos = {
+            0: 'assets/customers.jpg',
+            1: 'assets/farmers.jpg',
+            2: 'assets/grocery_store.png'
         }
 
-        function BasicForm(){
+        function sendData(){
 
-            return {
-                view:(vnode)=>{
-                    return [
-                        m(Input,{
-                            label: 'Nombre',
-                            data: requestData,
-                            name: 'name'
-                        }),
-                        m("div.mt-4"),
-                        
-                        m(Input,{
-                            class:'mt-4',
-                            label:'Apellidos',
-                            data: requestData,
-                            name: 'surname'
-                        }),
-
-                        m(Input,{
-                            class:"mt-4",
-                            type:'email',
-                            label: "Correo electrónico",
-                            data: requestData
-                        }),
-
-
-                        m(Input,{
-                            class:"mt-4",
-                            type:'email',
-                            label: "Correo electrónico",
-                            data: requestData
-                        })
-                    ]
-                }
-            }
-        }
-
-        function FarmerForm(){
-
-
+            //  SEND  TO API!
+            state = states.sent_form
         }
 
         return {
+            oninit:(vnode)=>{
+                requestData.date = new Date().toISOString()
+            },
             view: (vnode)=> {
-                return m("div",{class:"fixed inset-0 z-20 bg-amber-50 lg:p-4 flex flex-col justify-start h-dvh w-full"},
+                return m("div",{ class:"fixed inset-0 z-20 bg-amber-50 lg:p-4 flex flex-col justify-start h-dvh w-full"},
 
-                    m("div",{class:" p-4 w-full z-30 flex justify-between"},
+                    m("div",{ class: " p-4 w-full z-30 flex-none justify-between h-1/10"},
                         m("img",{src:"assets/close.svg", class:"w-20 lg:w-12 bg-black rounded-full p-2 cursor-pointer"}),
-                        // m(LegacyIcon)
                     ),
-
-
-                    m("div",{class:"absolute top-10 flex justify-end  items-center w-full lg:justify-center", style:"left:50%;transform:translateX(-50%);"},),
+                    
+                    m("div",{ class:"absolute top-10 flex justify-end items-center w-full lg:justify-center", style:"left:50%;transform:translateX(-50%);"},),
 
                     state == states.selecting_type ? 
                     [   
-                        m("div",{class:"flex-1  sm:max-lg:flex-col lg:flex justify-evenly align-center"},
+                        m("div",{class:"grow grid relative sm:max-lg:grid-cols-1 lg:grid-cols-3 sm:max-lg:grid-rows-3 lg:grid-rows-1 gap-4 p-4 grid-flow-row	"},
                             m(TypeButton,{
                                 title: "Soy consumidor",
                                 type: types.customer,
-                                description:"Quiero recibir ofertas de productos y novedades",
+                                description:"Quiero recibir ofertas y novedades",
                                 image:'assets/customers.jpg'
                             }),
 
@@ -292,19 +265,279 @@ function LandingPage(){
                             m(TypeButton,{
                                 title: "Soy comerciante",
                                 type: types.supplier,
-                                description:"Quiero comprar o almacenar productos al por mayor, quiero recibir ofertas y novedades",
-                                image:'assets/warehouse.jpg'
+                                description:"Quiero comprar al por mayor, almacenar o servir como punto de recogida",
+                                image:'assets/grocery_store.png'
                             })
                         )
                     ] :
+
+                    state == states.filling_data ?
                     [
-                        m("div",{class:"flex flex-col h-dvh w-full items-center p-4"},
-                            m(BasicForm)
+                        m("div",{ class:"flex flex-col h-dvh w-full p-4"},
+                            m("div",{ class:"flex w-full border-2 border-grey-600 bg-white justify-between items-center mb-8"}, 
+                                m("img", { src:typefotos[requestData.type || 0],  class:"ml-4 w-1/4 lg:w-20 aspect-square object-cover" }),
+
+                                m("h2", typelabels[requestData.type]),
+
+                                m(Button,{
+                                    class:"bg-sky-500 h-full", 
+                                    onclick:(e)=>{
+                                        state = 0
+                                    }
+                                }, m("h3.text-white","Cambiar"))
+                            ),  
+                            
+                            m(BasicForm),      
                         ),
-                    ]
+                    ] :
+                    /*
+                    state == states.filling_farmerdata ?
+                    [
+                        m("div",{class:"grow flex flex-col h-dvh w-full items-center p-4"},
+                            m(FarmerForm),      
+                        ),
+                    ] :*/
+
+                    m(FinishedPurchase)
+
+                    
                 )
             }
         }
+
+        function TypeButton(){
+            
+            return  {
+                view: (vnode)=> {
+                    let { image, title, description, type }  = vnode.attrs
+                    
+                    return m("div", {
+                            class: "h-full w-full relative cursor-pointer bg-center bg-no-repeat bg-cover",  
+                            style:`background-image:url('${image}');bg-center`,
+                            onclick: (e)=> { 
+                                requestData.type = type;
+                                state = states.filling_data 
+                            }
+                        },
+                        
+                        m("div",{ class:"absolute p-4 hover:opacity-0 opacity-9 z-20 inset-0 bg-black/50 flex flex-col items-center justify-center text-white align-center"}, 
+                            m("h1.text-white", title),
+                            m("p.text-center", description)
+                        ),
+
+                       // m("img",{ src:image, class:"object-cover absolute inset-0 z-10 overflow-hidden lg:h-full"})
+                    )
+                }
+            }
+        }
+
+        function BasicForm(){
+
+            let error = {};
+
+            let communities =  ['Andalucía','Aragón','Asturias','Cantabria','Castilla-La Mancha','Castilla y León',
+            'Cataluña','Extremadura','Galicia','Islas Baleares','Islas Canarias','La Rioja','Madrid',
+            'Murcia','Navarra','País Vasco','Comunidad Valenciana']
+
+            let provinces = {
+                0:["Almería", "Granada","Málaga","Jaén","Córdoba","Sevilla","Cádiz", "Huelva"],
+                1:["Huesca", "Teruel", "Zaragoza"],
+                2:[],
+                3:[],
+                4:[],
+                5:[],
+                6:[],
+                7:[],
+                8:[],
+                9:[],
+                10:[],
+                11:[],
+                12:[],
+                13:[]
+            }
+
+            function validateEmail(email) {
+                var re = /\S+@\S+\.\S+/;
+                return re.test(email);
+            }
+
+            function checkFields(){
+                
+                error = {}
+
+                if(!requestData.name) error.name = true 
+
+                if(!requestData.surname) error.surname = true
+
+                if(!requestData.email || !validateEmail(requestData.email)) error.email = true
+
+                if(!requestData.community) error.community = true
+
+                if(Object.keys(error) == 0){
+                    if(requestData.type == types.farmer){
+                        state =  states.filling_farmerdata
+                    } else {
+                        sendData()
+                    }
+                }
+            }
+
+            return {
+                view:(vnode)=>{
+
+                    return [
+                        m(".flex.flex-col.w-full.border-2.border-grey.p-4.pb-10",
+                            m("p.mb-8.text-center", 
+                                requestData.type !=  types.farmer ?
+                                "Introduce tu información de contacto" :
+                                "Para posterior uso de la herramienta se verificarán los datos"
+                            ),
+                            m(Input,{
+                                oninput:(e)=>{error.name ? error.name = e.target.value !='' : ''},
+                                class: error.name ? 'border-red-500':'',
+                                label: 'Nombre',
+                                placeholder:"Tu nombre",
+                                data: requestData,
+                                name: 'name'
+                            }),
+                            m(".mt-12.lg:mt-4"),
+                            m(Input,{
+                                oninput:(e)=>{error.surname ? error.name = e.target.value !='' : ''},
+                                class:(error.surname ? 'border-red-500':''),
+                                label:'Apellidos',
+                                placeholder:'Tus apellidos',
+                                data: requestData,
+                                name: 'surname'
+                            }),
+                            m(".mt-12.lg:mt-4"),
+                            m(Input,{
+                                oninput:(e)=>{error.email ? error.email= validateEmail(e.target.value) : ''},
+                                class:(error.email ? 'border-red-500':''),
+                                name:'email',
+                                placeholder:"Tu correo electrónico",
+                                type:'email',
+                                label: "Correo electrónico",
+                                data: requestData
+                            }),
+                            
+                            /*
+                            m(".mt-12.lg:mt-4"),
+                            m(Input,{
+                                oninput:(e)=>{error.email ? error.email= validateEmail(e.target.value) : ''},
+                                class:(error.email ? 'border-red-500':''),
+                                name:'email',
+                                placeholder:"Tu correo electrónico",
+                                type:'email',
+                                label: "Teléfono",
+                                data: requestData
+                            }),*/
+
+                            
+                            m(".mt-12.lg:mt-4"),
+                            m(Select,{
+                                label:"Comunidad Autónoma", 
+                                class:(error.community ? 'border-red-500':''),
+                                name:'community',
+                                placeholder:"Tu comunidad autónoma",
+                                data: requestData
+                            }, communities),
+
+                            m(".mt-12.lg:mt-4"),
+                            
+                            m(Select,{
+                               // oninput:(e)=>{error.province ? error.province= validateEmail(e.target.value) : ''},
+                                class:(error.email ? 'border-red-500':''),
+                                name:'province',
+                                placeholder:"Tu correo electrónico",
+                                label: "Provincia",
+                                data: requestData
+                            }),
+                            m(Button,{
+                                class:"bg-black-900 w-full d-block mt-8",
+                                onclick:checkFields,
+                            },m("h1.text-white", "Enviar")),
+                        ),
+
+                        /*
+                        m(Input,{
+                            class:"mt-4",
+                            type:'email',
+                            label: "Correo electrónico",
+                            data: requestData
+                        })*/
+                    ]
+                }
+            }
+        }
+
+        function FarmerForm(){
+
+            let frutas = [
+                'naranjas', 'kakis', 'fresas', 'melones', 'aguacates', 'plátanos', 'kiwis', 'granadas', 'hortalizas'
+            ]
+
+            let comunidades = [
+                'Comunidad Valenciana',
+                "Murcia",
+                "Madrid",
+            ]
+
+            function checkData(){
+
+            }
+
+            return {
+                view:(vnode)=> {
+                    return [
+                        m("p.mb-12.text-center", "Para posterior uso de la herramienta, se verificará que el agricultor sea un vendedor autorizado"),
+                        m(Select,{
+                            label:"¿Qué productos vende?",
+                        }, frutas ),
+
+
+                        m(".mt-8.lg:mt-4"),
+                        m(Input,{
+                            label:'¿Cuál es tu situación actual?',
+                            placeholder:'Explica tu situación',
+                            rows:4,
+                            type:'textarea',
+                            name:'farmerSituation',
+                            data:requestData
+                        }),
+
+                        m(Button,{
+
+
+                            class:"w-full mt-8 lg:mt-4",
+                            onclick:()=>{
+
+
+                            }
+                        },m("h1.text-white","Enviar"))
+
+                    ]
+                }
+            }
+        }
+
+        function FinishedPurchase(){
+            
+            return {
+                view: (vnode) =>{
+                    return m(".flex.flex-col.justify-center.items-center.grow.p-4", 
+                        m("img",{src:'assets/gracias.png', class:"w-full lg:w-1/3 p-8"}),
+                        m("p.text-center", "Te contactaremos cuando tengamos nuevas noticias. Muchas gracias por tu colaboración!"),
+                        m(Button,{
+                            class:"mt-4 w-full",
+
+                        }, m("h1.text-white", "Compartir "))
+
+                    )
+                }
+            }
+
+        }
+
     }
 }
 

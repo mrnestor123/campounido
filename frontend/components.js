@@ -90,19 +90,23 @@ function Input() {
         'date': {class:'uk-input',type:'date'}
     }
 
-    let inputclass = 'w-full p-4 '
+    let inputclass = ' block p-8 lg:p-4 w-full  border-2 border-b-4 focus:border-green-800 lg:placeholder:text-xl placeholder:text-3xl  placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-green-600 '
 
+    //let inputclass = "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
+
+    let labelclass = "block text-4xl lg:text-xl font-medium leading-6 text-gray-900 mb-8 lg:mb-2"
+    
     return {
         view: (vnode) => {
             let { data, id, name, type = 'input', oninput, style, rows, label } = vnode.attrs
             
             return [
                 m(".flex.flex-col.w-full",
-                label ?  m("p.mb-2", localize(label)) : null,
+                label ?  m("label",{class:labelclass}, localize(label)) : null,
                 type != "textarea" ?                  
                     m("input",
                     {
-                        class: inputclass,
+                        class: inputclass + (vnode.attrs.class || ''),
                         //style: style || '',
                         placeholder: vnode.attrs.placeholder || '',
                         id: id || undefined,
@@ -136,6 +140,22 @@ function Input() {
 }
 
 
+function Form(){
+
+
+    return {
+        view:(vnode)=>{
+
+            return  m("form",{
+                class:""
+            }
+
+            
+            )
+        }
+    }
+}
+
 
 function LegacyIcon(){
 
@@ -154,4 +174,78 @@ function LegacyIcon(){
 }
 
 
-export {Icon, Button, Section, Input, LegacyIcon}
+/*
+*
+*   TODO: GRID
+*/
+function Grid(){
+
+    return {
+        view:(vnode)=>{
+            let { cols, rows, mcols, mrows} = vnode.attrs
+
+            return m("div",{
+
+                class: "grid "
+
+            })
+
+        }
+    }
+}
+
+
+//children es un array de ['value':'x', 'label':1], tmb puede no llevar value y ser solo las labels [1,2,3,4]
+function Select() {
+    let data, name;
+
+    let selectedoption = null
+
+    let selectclass = ' block p-8 lg:p-4 w-full  border-2 border-b-4 focus:border-green-800  placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-green-600 '
+
+    //let inputclass = "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
+
+    let labelclass = "block text-4xl lg:text-xl font-medium leading-6 text-gray-900 mb-8 lg:mb-2"
+    
+
+    return {
+        view: (vnode) => {
+            data = vnode.attrs.data
+            name = vnode.attrs.name
+            let label  = vnode.attrs.label  
+            let placeholder = vnode.attrs.placeholder         
+
+            return  m(".flex.flex-col.w-full",
+                label ?  m("label",{class:labelclass}, localize(label)) : null,
+                m("select",
+                {
+                    placeholder:vnode.attrs.placeholder,
+                    onchange: (e) => {
+                        if(data && name != undefined){
+                            data[name] = e.target.value;
+                            if (data[name].startsWith('[object')) {
+                                data[name] = vnode.children[e.target.selectedIndex].value
+                            }
+                        }
+                        vnode.attrs.onchange ? vnode.attrs.onchange(e) : null
+                    },
+                    class: selectclass,
+                    value:  data && name != undefined ? data[name] || ''  : placeholder?placeholder: '',
+                },
+                [
+                    placeholder ?  m("option",{disabled:true}, placeholder):null,
+                    vnode.children.map((child, i) => {
+                        if (child.value || child.name) {
+                            return m("option", { value: child.value || child.name }, child.label || child.title)
+                        } else {
+                            return m("option", child)
+                        }
+                    })
+                ]
+            ))
+        }
+    }
+}
+
+
+export {Icon, Button, Section, Input, LegacyIcon, Select}
