@@ -239,7 +239,7 @@ function LandingPage(){
             view: (vnode)=> {
                 return m("div",{ class:"fixed inset-0 z-20 bg-amber-50 lg:p-4 flex flex-col justify-start h-dvh w-full"},
 
-                    m("div",{ class: " p-4 w-full z-30 flex-none justify-between h-1/10"},
+                    m("div",{ class: " p-4 w-full z-30 flex-none justify-between h-1/10",onclick:(e)=> showRequestForm=false},
                         m("img",{src:"assets/close.svg", class:"w-20 lg:w-12 bg-black rounded-full p-2 cursor-pointer"}),
                     ),
                     
