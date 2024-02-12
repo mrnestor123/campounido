@@ -90,11 +90,11 @@ function Input() {
         'date': {class:'uk-input',type:'date'}
     }
 
-    let inputclass = ' block p-8 lg:p-4 w-full  border-2 border-b-4 focus:border-green-800 lg:placeholder:text-xl placeholder:text-3xl  placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-green-600 '
+    let inputclass = ' block p-8 lg:p-4 w-full  border-2 border-b-4 focus:border-green-800 text-4xl lg:placeholder:text-xl placeholder:text-3xl  placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-green-600 '
 
     //let inputclass = "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6"
 
-    let labelclass = "block text-4xl lg:text-xl font-medium leading-6 text-gray-900 mb-8 lg:mb-2 flex items-end"
+    let labelclass = "block text-4xl lg:text-xl font-medium leading-6 text-gray-900 mb-4 lg:mb-2 flex items-end"
     
     return {
         view: (vnode) => {
@@ -102,7 +102,7 @@ function Input() {
             
             return [
                 m(".flex.flex-col.w-full.items-start",
-                label ?  m("label",{class:labelclass}, localize(label), (required ? m('.text-red-900.text-4xl.lg:text-xl',' *'):'')) : null,
+                label ?  m("label",{class:labelclass}, localize(label), (required ? m('.text-red-900.ml-1.text-4xl.lg:text-xl',' *'):'')) : null,
                 type != "textarea" ?                  
                     m("input",
                     {
@@ -126,7 +126,7 @@ function Input() {
                 ) :
                 m("textarea",
                     {
-                        class: types[type].class,
+                        class: inputclass + (vnode.attrs.class || ''),
                         placeholder: vnode.attrs.placeholder || '',
                         style: style || '',
                         rows: rows || "2",
@@ -201,26 +201,28 @@ function Select() {
 
     let selectedoption = null
 
-    let selectclass = ' block p-8 lg:p-4 w-full  border-2 border-b-4 focus:border-green-800  placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-green-600 '
+    let selectclass = ' block p-8 lg:p-4 w-full  border-2 border-b-4 bg-white text-4xl focus:border-green-800  placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-green-600 '
 
     //let inputclass = "block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6 focus:ring-green-600"
 
-    let labelclass = "block text-4xl lg:text-xl font-medium leading-6 text-gray-900 mb-8 lg:mb-2"
+    let labelclass = "block text-4xl lg:text-xl font-medium leading-6 text-gray-900 mb-4 lg:mb-2 flex items-end"
     
 
    // let selectclass = "block w-full leading-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600  sm:text-sm sm:leading-6"
 
     return {
         view: (vnode) => {
+            let {required,label,placeholder, disabled} =  vnode.attrs   
+
+
             data = vnode.attrs.data
             name = vnode.attrs.name
-            let label  = vnode.attrs.label  
-            let placeholder = vnode.attrs.placeholder         
 
             return  m(".flex.flex-col.w-full",
-                label ?  m("label",{class:labelclass}, localize(label)) : null,
+                label ?  m("label",{class:labelclass}, localize(label), (required ? m('.text-red-900.ml-1.text-4xl.lg:text-xl',' *'):'')) : null,
                 m("select",
                 {
+                    disabled: disabled,
                     placeholder:vnode.attrs.placeholder,
                     onchange: (e) => {
                         if(data && name != undefined){

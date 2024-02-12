@@ -51,9 +51,6 @@ function LandingPage(){
 
                 m(ContactSections),
 
-
-
-
             ]
         }
     }
@@ -93,17 +90,16 @@ function LandingPage(){
 
 
     function ContactSections(){
-
-        //Hace 50 años, tras haber estado emigrando en Brasil, volvió a su tierra natal con mi abuela, 2 hijos más y una por venir.
-        //Con "4 pelas" empezó a buscarse la vida. Abrió un taller, compró un campo y poco a poco, con paciencia y esfuerzo, fue expandiéndose hasta tener 10 hectáreas. <br><br>
-        let ourstory = `Somos una familia de agricultores que reside en Picassent, Valencia. Todo empezó con un campo de naranjos que plantó mi abuelo.  Con paciencia y mucho trabajo, llegamos a tener 10 hectáreas en campos. <br> <br>
+        // Hace 50 años, tras haber estado emigrando en Brasil, volvió a su tierra natal con mi abuela, 2 hijos más y una por venir.
+        // Con "4 pelas" empezó a buscarse la vida. Abrió un taller, compró un campo y poco a poco, con paciencia y esfuerzo, fue expandiéndose hasta tener 10 hectáreas. <br><br>
+        let ourstory = `Somos una familia de agricultores que reside en Picassent, Valencia. Todo empezó con un campo de naranjos que plantó mi abuelo. Con paciencia y mucho trabajo, llegamos a tener 10 hectáreas en campos. <br> <br>
             Me acuerdo cuando era pequeño y nos llevaba a trabajar al campo a mí y a mi hermano. Quitábamos hierbas con la azada, o como él lo llamaba, "la pluma". Yo siempre intentaba escaquearme y le decía "Abuelo, cuando sea mayor te ayudaré" y mi abuelo, riéndose, algunas veces cedía dejándome descansar. <br><br> 
             Ahora que soy mayor, aunque ya no esté, he decidido ayudarle. A preservar y compartir lo que más le gustaba.<br> <br>
-            <strong>El campo </strong>`
+            <strong>El campo</strong>`
             
         let objectives = `Este año, hemos tenido que dejar por cultivar la mitad de nuestros campos de granadas porque salía más rentable dejarlos tirados que cultivarlos.<br><br> 
             Tras ver la situación actual y a sabiendas de que mucha gente está igual o peor que nosotros hemos decidido crear El campo unido. <br> <br>
-            Nuestro objetivo es conseguir transparentar nuestro trabajo, avanzar y modernizar el campo. Para crear un sistema y conectar al cliente con el agricultor, para que así ningún campo deba ser abandonado.`;
+            Nuestro objetivo es conseguir transparentar nuestro trabajo, avanzar y modernizar el campo. Para crear un sistema en el que podamos conectar al cliente con el agricultor, al agricultor con el comercio local. Para que vuelva a tener el control de su producto y así ningún campo deba ser abandonado.`;
 
         let imgclass = "w-full object-cover absolute  rounded-lg shadow-lg inset-0 h-dvh "
 
@@ -149,12 +145,10 @@ function LandingPage(){
                                     let element = document.getElementById('objective')
                                     element.scrollIntoView({behavior: "smooth", block: "start", inline: "end"});
                                 }
-                            }, m("h1",{class:"text-white"},"En que consiste ?"))
+                            }, m("h1",{class:"text-white"},"En qué consiste"))
                         ),
 
                         m("img", {src:`assets/${ window.innerWidth > 1000? "caseta_ordena": "caseta_movil"}.jpg`, class: imgclass, id:'animated-photo'}),
-
-                        
                     ]),
                     
                     m(Section,{class: sectionclass,  id: 'objective'},[
@@ -206,7 +200,7 @@ function LandingPage(){
             sent_form:2
         }
 
-        let state = 0;
+        let state = 2;
 
         let types = {
             customer: 0,
@@ -238,12 +232,13 @@ function LandingPage(){
             view: (vnode)=> {
                 return m("div",{ class:"fixed inset-0 z-20 bg-amber-50 lg:p-4 flex flex-col justify-start h-dvh w-full"},
 
-                    m("div",{ class: " p-4 w-full z-30 flex-none justify-between h-1/10",onclick:(e)=> showRequestForm = false},
-                        m("img",{src:"assets/close.svg", class:"w-20 lg:w-12 bg-black rounded-full p-2 cursor-pointer"}),
+                    m("div",{ class: " p-4 w-full z-30 flex-none justify-between h-1/10"},
+                        m("img",{src:"assets/close.svg",onclick:(e)=> showRequestForm = false, class:"w-20 lg:w-12 bg-black rounded-full p-2 cursor-pointer"}),
                     ),
                     
-                    m("div",{ class:"absolute top-10 flex justify-end items-center w-full lg:justify-center", style:"left:50%;transform:translateX(-50%);"},),
+                    m("div",{ class:"absolute top-10 flex justify-end items-center w-full lg:justify-center", style:"left:50%;transform:translateX(-50%);"}),
 
+                    
                     state == states.selecting_type ? 
                     [   
                         m("div",{class:"grow grid relative sm:max-lg:grid-cols-1 lg:grid-cols-3 sm:max-lg:grid-rows-3 lg:grid-rows-1 gap-4 p-4 grid-flow-row	"},
@@ -339,20 +334,22 @@ function LandingPage(){
             'Murcia','Navarra','País Vasco','Comunidad Valenciana']
 
             let provinces = {
-                0:["Almería", "Granada","Málaga","Jaén","Córdoba","Sevilla","Cádiz", "Huelva"],
-                1:["Huesca", "Teruel", "Zaragoza"],
-                2:[],
-                3:[],
-                4:[],
-                5:[],
-                6:[],
-                7:[],
-                8:[],
-                9:[],
-                10:[],
-                11:[],
-                12:[],
-                13:[]
+                "Andalucia":["Almería", "Granada","Málaga","Jaén","Córdoba","Sevilla","Cádiz", "Huelva"],
+                "Aragón":["Huesca", "Teruel", "Zaragoza"],
+                "Asturias":["Asturias"],
+                "Cantabria":["Cantabria"],
+                "Castilla-la Mancha":["Albacete","Ciudad Real","Cuenca","Guadalajara","Toledo"],
+                'Castilla y León':["Ávila","Burgos","León","Palencia","Salamanca","Segovia","Soria","Valladolid", "Zamora"],
+                "Cataluña":["Barcelona","Gerona","Lérida", "Tarragona"],
+                "Extremadura":["Cáceres","Badajoz"],
+                "Galicia":["Santiago","Coruña","Betanzos","Lugo","Mondoñedo","Orense","Tuy"],
+                "Islas Baleares":["Mallorca","Cabrera","Menorca","Ibiza", "Formentera"],
+                "Islas Canarias":["Santa Cruz de Tenerife ","Las palmas"],
+                "La Rioja":["La Rioja"],
+                "Madrid":["Madrid"],
+                "Navarra":["Navarra"],
+                "País Vasco":["Álava","Guipúzcoa","Vizcaya"],
+                "Comunidad Valenciana":["Alicante","Valencia","Castellón"]
             }
 
             function validateEmail(email) {
@@ -371,6 +368,8 @@ function LandingPage(){
                 if(!requestData.email || !validateEmail(requestData.email)) error.email = true
 
                 if(!requestData.community) error.community = true
+
+                if(requestData.type == types.farmer && !requestData.farmerInfo) error.farmerInfo = true
 
                 if(Object.keys(error) == 0){
                     if(requestData.type == types.farmer){
@@ -391,28 +390,58 @@ function LandingPage(){
                                 "Introduce tu información de contacto" :
                                 "Para posterior uso de la herramienta se verificarán los datos"
                             ),
-                            m(Input,{
-                                oninput:(e)=>{ error.name ? error.name = e.target.value !='' : ''},
-                                class: error.name ? 'border-red-500':'',
-                                required:true,
-                                label: 'Nombre',
-                                placeholder:"Tu nombre",
-                                data: requestData,
-                                name: 'name'
-                            }),
+
+                            m(".flex.sm:max-lg:flex-col.lg:flex",
+                                m(Input,{
+                                    oninput:(e)=>{ error.name ? error.name = e.target.value !='' : ''},
+                                    class: error.name ? 'border-red-500':'',
+                                    required:true,
+                                    label: 'Nombre',
+                                    placeholder:"Tu nombre",
+                                    data: requestData,
+                                    name: 'name'
+                                }),
+                                m(".mt-12.lg:ml-4"),
+                                m(Input,{
+                                    oninput:(e)=>{ error.surname ? error.name = e.target.value !='' : ''},
+                                    class:(error.surname ? 'border-red-500':''),
+                                    required:true,
+                                    label:'Apellidos',
+                                    placeholder:'Tus apellidos',
+                                    data: requestData,
+                                    name: 'surname'
+                                })
+                            ),
+
+                            m(".mt-12.lg:mt-4"),
+
+                            m(".flex.lg:flex",
+                                m(Select,{
+                                    label:"Comunidad Autónoma", 
+                                    class:(error.community ? 'border-red-500':''),
+                                    name:'community',
+                                    required:true,
+                                    placeholder:"Tu comunidad autónoma",
+                                    data: requestData
+                                }, communities),
+
+                                m(".ml-4.lg:ml-4"),
+                                
+                                m(Select,{
+                                    // oninput:(e)=>{error.province ? error.province= validateEmail(e.target.value) : ''},
+                                    disabled: !requestData.community,
+                                    class:(error.email ? 'border-red-500':''),
+                                    name:'province',
+                                    required:true,
+                                    placeholder:"Tu provincia",
+                                    label: "Provincia",
+                                    data: requestData
+                                }, requestData.community ? provinces[requestData.community] : '')
+                            ),
+
                             m(".mt-12.lg:mt-4"),
                             m(Input,{
-                                oninput:(e)=>{ error.surname ? error.name = e.target.value !='' : ''},
-                                class:(error.surname ? 'border-red-500':''),
-                                required:true,
-                                label:'Apellidos',
-                                placeholder:'Tus apellidos',
-                                data: requestData,
-                                name: 'surname'
-                            }),
-                            m(".mt-12.lg:mt-4"),
-                            m(Input,{
-                                oninput:(e)=>{ error.email ? error.email= validateEmail(e.target.value) : ''},
+                                oninput:(e)=> { error.email ? error.email= validateEmail(e.target.value) : ''},
                                 required:true,
                                 class:(error.email ? 'border-red-500':''),
                                 name:'email',
@@ -422,6 +451,23 @@ function LandingPage(){
                                 data: requestData
                             }),
                             
+                            requestData.type == types.farmer ? [
+                                m(".mt-12.lg:mt-4"),
+                                m(Input,{
+                                    oninput:(e)=>{ error.farmerInfo ? e.target.value != '' : ''},
+                                    required:true,
+                                    class:( error.farmerInfo ? 'border-red-500':''),
+                                    name:'farmerInfo',
+                                    placeholder:"Tengo un campo, vendo naranjas, kakis...",
+                                    type:'textarea',
+                                    rows: 3,
+                                    label: "¿Cuál es tu situación actual?",
+                                    data: requestData
+                                })  
+                            ]: null,
+
+
+
                             /*
                             m(".mt-12.lg:mt-4"),
                             m(Input,{
@@ -434,26 +480,6 @@ function LandingPage(){
                                 data: requestData
                             }),*/
 
-                            
-                            m(".mt-12.lg:mt-4"),
-                            m(Select,{
-                                label:"Comunidad Autónoma", 
-                                class:(error.community ? 'border-red-500':''),
-                                name:'community',
-                                placeholder:"Tu comunidad autónoma",
-                                data: requestData
-                            }, communities),
-
-                            m(".mt-12.lg:mt-4"),
-                            
-                            m(Select,{
-                               // oninput:(e)=>{error.province ? error.province= validateEmail(e.target.value) : ''},
-                                class:(error.email ? 'border-red-500':''),
-                                name:'province',
-                                placeholder:"Tu correo electrónico",
-                                label: "Provincia",
-                                data: requestData
-                            }),
 
                             /*
                             m(Input,{
@@ -531,14 +557,39 @@ function LandingPage(){
             
             return {
                 view: (vnode) =>{
-                    return m(".flex.flex-col.justify-center.items-center.grow.p-4", 
-                        m("img",{src:'assets/gracias.png', class:"w-full lg:w-1/3 p-8"}),
-                        m("p.text-center", "Te contactaremos cuando tengamos nuevas noticias. Muchas gracias por tu colaboración!"),
-                        m(Button,{
-                            class:"mt-4 w-full",
+                    return  m(".grow.flex.flex-col.justify-center.p-4", 
+                        m(".flex.flex-col.justify-center.items-center.p-4.border-2.bg-white.m", 
+                            m("img",{src:'assets/orange_tree.jpg', class:"w-full lg:w-1/3 p-8"}),
 
-                        }, m("h1.text-white", "Compartir "))
+                            m("h1.text-center.mb-4","Muchas gracias por tu colaboración"),
+                            m("p.text-center", "Te contactaremos cuando tengamos nuevas noticias. Esperamos vernos pronto!"),
 
+                            m(".sm:max-lg:flex-col.lg:flex.w-full",
+                                m(Button,{
+                                    class:"mt-4 mr-4 bg-red-800 w-full",
+
+                                    onclick:(e)=>{
+                                        window.open(`https://gofund.me/06244cf2`,'_blank')
+                                    }
+                                }, 
+                                m("h2.text-white","Apoya nuestra causa ")
+                                ),
+
+
+                                m(Button,{
+                                    class:"mt-4 w-full ml-2 lg:ml-0 bg-cyan-800",
+                                    onclick:(e)=>{
+                                        window.open('whatsapp://send?text=https://www.elcampounido.es \n\nForma parte del campo, forma parte de nuestra tierra')
+                                    }
+                                }, 
+                                    m("a",{
+                                        "data-action":"share/whatsapp/share",
+                                        "target":"_blank",
+                                        "href":'href="whatsapp://send?text=Forma parte del campo, forma parte de nuestra tierra"'
+                                    },m("h2.text-white", "Comparte con los demás"))
+                                )
+                            )
+                        )
                     )
                 }
             }
