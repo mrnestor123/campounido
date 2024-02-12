@@ -39,18 +39,9 @@ function LandingPage(){
                 showRequestForm ? m(RequestForm) :  null,
 
                 m(Carousel),
-                // PARA UNIRSE
-                /*m("div", {style:"height: 15vh;"},
-
-                    m("h1", {class: "text-4xl font-bold text-center p-8"}, "Únete a nosotros"),
-                    m("h2", {class: "text-2xl text-center"}, "Productos de la tierra, de la huerta, de la granja."),
-
-
-                
-                ),*/
 
                 m(ContactSections),
-
+                
             ]
         }
     }
@@ -192,6 +183,11 @@ function LandingPage(){
         let requestData = {
             'type':'',
             'date':'',
+            'community':'',
+            'province':'',
+            'locality':'',
+            'email':'',
+            'farmerInfo':''
         }
 
         let states = {
@@ -200,7 +196,7 @@ function LandingPage(){
             sent_form:2
         }
 
-        let state = 2;
+        let state = 0;
 
         let types = {
             customer: 0,
@@ -221,8 +217,11 @@ function LandingPage(){
         }
 
         function sendData(){
+            console.log('REQUESTDATA', requestData)
+
             //  SEND  TO API!
             state = states.sent_form
+
         }
 
         return {
@@ -363,7 +362,7 @@ function LandingPage(){
 
                 if(!requestData.name) error.name = true 
 
-                if(!requestData.surname) error.surname = true
+                if(!requestData.locality) error.locality = true
 
                 if(!requestData.email || !validateEmail(requestData.email)) error.email = true
 
@@ -373,7 +372,7 @@ function LandingPage(){
 
                 if(Object.keys(error) == 0){
                     if(requestData.type == types.farmer){
-                        state =  states.filling_farmerdata
+                        state = states.filling_farmerdata
                     } else {
                         sendData()
                     }
@@ -396,11 +395,12 @@ function LandingPage(){
                                     oninput:(e)=>{ error.name ? error.name = e.target.value !='' : ''},
                                     class: error.name ? 'border-red-500':'',
                                     required:true,
-                                    label: 'Nombre',
-                                    placeholder:"Tu nombre",
+                                    label: 'Nombre completo',
+                                    placeholder:"Tu nombre completo",
                                     data: requestData,
                                     name: 'name'
                                 }),
+                                /*
                                 m(".mt-12.lg:ml-4"),
                                 m(Input,{
                                     oninput:(e)=>{ error.surname ? error.name = e.target.value !='' : ''},
@@ -410,7 +410,7 @@ function LandingPage(){
                                     placeholder:'Tus apellidos',
                                     data: requestData,
                                     name: 'surname'
-                                })
+                                })*/
                             ),
 
                             m(".mt-12.lg:mt-4"),
@@ -426,9 +426,7 @@ function LandingPage(){
                                 }, communities),
 
                                 m(".ml-4.lg:ml-4"),
-                                
                                 m(Select,{
-                                    // oninput:(e)=>{error.province ? error.province= validateEmail(e.target.value) : ''},
                                     disabled: !requestData.community,
                                     class:(error.email ? 'border-red-500':''),
                                     name:'province',
@@ -438,6 +436,18 @@ function LandingPage(){
                                     data: requestData
                                 }, requestData.community ? provinces[requestData.community] : '')
                             ),
+
+                            m(".mt-12.lg:mt-4"),
+                            m(Input,{
+                                oninput:(e)=> { error.town ? error.town = validateEmail(e.target.value) : ''},
+                                required: true,
+                                class: (error.town ? 'border-red-500':''),
+                                name:'locality',
+                                placeholder: "Tú localidad",
+                                type:'email',
+                                label: "Localidad",
+                                data: requestData
+                            }),
 
                             m(".mt-12.lg:mt-4"),
                             m(Input,{
@@ -461,7 +471,7 @@ function LandingPage(){
                                     placeholder:"Tengo un campo, vendo naranjas, kakis...",
                                     type:'textarea',
                                     rows: 3,
-                                    label: "¿Cuál es tu situación actual?",
+                                    label: "¿Cuál es tu situación actual? ",
                                     data: requestData
                                 })  
                             ]: null,
@@ -567,13 +577,10 @@ function LandingPage(){
                             m(".sm:max-lg:flex-col.lg:flex.w-full",
                                 m(Button,{
                                     class:"mt-4 mr-4 bg-red-800 w-full",
-
                                     onclick:(e)=>{
                                         window.open(`https://gofund.me/06244cf2`,'_blank')
                                     }
-                                }, 
-                                m("h2.text-white","Apoya nuestra causa ")
-                                ),
+                                }, m("h2.text-white","Apoya nuestra causa ")),
 
 
                                 m(Button,{
@@ -581,8 +588,7 @@ function LandingPage(){
                                     onclick:(e)=>{
                                         window.open('whatsapp://send?text=https://www.elcampounido.es \n\nForma parte del campo, forma parte de nuestra tierra')
                                     }
-                                }, 
-                                    m("a",{
+                                },  m("a",{
                                         "data-action":"share/whatsapp/share",
                                         "target":"_blank",
                                         "href":'href="whatsapp://send?text=Forma parte del campo, forma parte de nuestra tierra"'
